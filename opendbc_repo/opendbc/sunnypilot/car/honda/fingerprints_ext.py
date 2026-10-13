@@ -19,6 +19,8 @@ FW_VERSIONS_EXT = {
   CAR.HONDA_CIVIC: {
     (Ecu.eps, 0x18da30f1, None): [
       b'39990-TBA,A030\x00\x00',
+      b'39990-TEA-H020\x00\x00',  # stock
+      b'39990-TEA,H020\x00\x00',  # PTM
     ],
   },
   CAR.HONDA_CIVIC_BOSCH: {
