@@ -72,3 +72,24 @@ def configure_modified_eps(cp: structs.CarParams, candidate) -> None:
     cp.lateralTuning.pid.kf = 0.000012
     cp.lateralTuning.pid.kfBP = []
     cp.lateralTuning.pid.kfV = []
+
+
+# =====================================================================
+# VFN 指南 - 第 3 步：H020 PTM 专属扭矩限制与 PID 增益覆盖
+# 注意事项：请确保将下面这段代码放入 `_get_params_sp` 函数中，
+# 并且紧跟在 `configure_modified_eps(stock_cp, candidate)` 这一行的后面！
+# =====================================================================
+"""
+# (请将下面这块代码粘贴到 `_get_params_sp` 中对应的位置)
+
+    # TEA-H020 PTM: the firmware clamps q at 1663, so E4 saturates at 3840
+    # (Civic Bosch defaults to 4096).
+    # Gains match the Clarity/modified-EPS PID base; fine-tune on-screen (step 5),
+    # not here.
+    if ret.flags & HondaFlagsSP.EPS_MODIFIED and any(
+        fw.ecu == "eps" and fw.fwVersion.replace(b",", b"-").startswith(b"39990-TEA-H020") for fw in car_fw):
+      stock_cp.lateralParams.torqueBP, stock_cp.lateralParams.torqueV = [[0, 3840], [0, 3840]]
+      stock_cp.lateralTuning.pid.kpBP, stock_cp.lateralTuning.pid.kpV = [[0.0], [0.03]]
+      stock_cp.lateralTuning.pid.kiBP, stock_cp.lateralTuning.pid.kiV = [[0.0], [0.01]]
+      stock_cp.lateralTuning.pid.kf = 0.000012
+"""
