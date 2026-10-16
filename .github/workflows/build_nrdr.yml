@@ -1,11 +1,14 @@
 name: Build NRDR for C3XL
 
 on:
-  workflow_dispatch:  # 允许手动点击运行
+  push:
+    branches: [ nrdr-clean ]  # 只要推送到 nrdr-clean 分支，就自动跑
+  workflow_dispatch:          # 保留手动按钮
 
 jobs:
   build:
     runs-on: ubuntu-22.04
+    # ... 下面保持不变
 
     steps:
       - name: Checkout code
