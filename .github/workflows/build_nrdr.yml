@@ -1,0 +1,36 @@
+name: Build NRDR for C3XL
+
+on:
+  workflow_dispatch:  # 允许手动点击运行
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build openpilot
+        run: |
+          cd openpilot
+          ./build.py
+
+      - name: Package output
+        run: |
+          mkdir -p /tmp/output
+          cp -r /data/openpilot/* /tmp/output/ || true
+          tar -czvf openpilot-build.tar.gz -C /data openpilot
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nrdr-build
+          path: openpilot-build.tar.gz
